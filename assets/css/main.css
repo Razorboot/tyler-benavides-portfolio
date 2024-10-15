@@ -191,7 +191,7 @@ input, select, textarea {
 	}
 
 		h1.major {
-			margin: 0 0 1.3em 0;
+			margin: 0 0 0.5 0;
 			position: relative;
 			padding-bottom: 0.35em;
 		}
@@ -327,8 +327,59 @@ input, select, textarea {
 		text-align: right;
 	}
 
-/* Row */
+	/* Dropdown container */
+	.dropdown {
+		position: relative;
+		display: inline-block;
+	}
 
+	/* Hide the dropdown menu initially with a transition */
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		background-color: #7358b6;
+		min-width: 160px;
+		z-index: 1;
+		text-align: left;
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(-10px);
+		transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+	}
+
+	/* Dropdown menu links */
+	.dropdown-content {
+		opacity: 0;
+		visibility: hidden;
+		position: absolute;
+		background-color: #7358b6;
+		min-width: 160px;
+		z-index: 1;
+		text-align: left;
+		transform: translateY(-10px);
+		transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+	}
+
+	.dropdown-content li a {
+		color: rgba(255, 255, 255, 0.35);
+		text-decoration: none;
+		display: block;
+	}
+
+	.dropdown-content li a:hover {
+		color: rgba(255, 255, 255, 0.55);
+	}
+
+	/* Show the dropdown with animation on hover */
+	.dropdown:hover .dropdown-content {
+		display: block;
+		opacity: 1;
+		visibility: visible;
+		transform: translateY(0);
+	}
+
+
+	/* Row */
 	.row {
 		display: flex;
 		flex-wrap: wrap;
@@ -2585,6 +2636,23 @@ input, select, textarea {
 			float: left;
 			margin: 0 1.5em 1em 0;
 			top: 0.25em;
+		}
+
+		/* Custom class for aligning an image to the left with text wrapping */
+		.image-left-text {
+			float: left;
+			margin-right: 1.5em;
+			margin-bottom: 1em;
+			max-width: 40%;
+			border-radius: 50%;
+		}
+
+		/* Ensures text wraps around the image */
+		.image-left-text img {
+			display: block;
+			width: 80%;
+			height: auto;
+			border-radius: 50%;
 		}
 
 		.image.right {
