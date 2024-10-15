@@ -346,13 +346,6 @@ input, select, textarea {
 	}
 
 	/* Hide the dropdown menu initially with a transition */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 	/* Dropdown container */
 	.dropdown {
 		position: relative;
@@ -396,80 +389,12 @@ input, select, textarea {
 		margin: 5 auto;           	/* Center the container in its parent element */
 		width: 100%;              	/* Optional: Full width container */
 		box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-=======
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-	.dropdown-content {
-		display: none;
-		position: absolute;
-		background-color: #7358b6;
-		min-width: 160px;
-		z-index: 1;
-		text-align: left;
-		opacity: 0;
-		visibility: hidden;
-		transform: translateY(-10px);
-		transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
-=======
->>>>>>> parent of bdf4bb6 (Init dropdown menu)
 	}
-
-	/* Dropdown menu links */
-	.dropdown-content {
-		opacity: 0;
-		visibility: hidden;
-		position: absolute;
-		background-color: #7358b6;
-		min-width: 160px;
-		z-index: 1;
-		text-align: left;
-		transform: translateY(-10px);
-		transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-	}
-
-	.dropdown-content li a {
-		color: rgba(255, 255, 255, 0.35);
-		text-decoration: none;
-		display: block;
-	}
-
-	.dropdown-content li a:hover {
-		color: rgba(255, 255, 255, 0.55);
-	}
-
-	/* Show the dropdown with animation on hover */
-	.dropdown:hover .dropdown-content {
-		display: block;
-		opacity: 1;
-		visibility: visible;
-		transform: translateY(0);
+	
+	.video-container iframe {
+		max-width: 100%;          /* Ensure iframes are responsive */
+		height: 50vh;             /* Maintain aspect ratio */
+		padding: 50px;
 	}
 
 
