@@ -334,48 +334,59 @@ input, select, textarea {
 	}
 
 	/* Hide the dropdown menu initially with a transition */
-	.dropdown-content {
-		display: none;
-		position: absolute;
-		background-color: #7358b6;
-		min-width: 160px;
-		z-index: 1;
-		text-align: left;
-		opacity: 0;
-		visibility: hidden;
-		transform: translateY(-10px);
-		transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-	}
+	/* Dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
 
-	/* Dropdown menu links */
-	.dropdown-content {
-		opacity: 0;
-		visibility: hidden;
-		position: absolute;
-		background-color: #7358b6;
-		min-width: 160px;
-		z-index: 1;
-		text-align: left;
-		transform: translateY(-10px);
-		transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-	}
+/* Hide the dropdown menu initially with a transition */
+.dropdown-content {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px); /* Start slightly above */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: absolute; /* Ensure it does not affect other layout elements */
+    z-index: 1; /* Bring it in front of other content if needed */
+    background-color: rgba(74, 58, 112, 0.9); /* Add a semi-transparent white background */
+    border-radius: 8px; /* Optional: Rounded corners for a smooth look */
+    padding: 10px; /* Add some padding for spacing */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
+	border-radius: 7px;
+}
 
-	.dropdown-content li a {
-		color: rgba(255, 255, 255, 0.35);
-		text-decoration: none;
-		display: block;
-	}
+/* Show the dropdown content on hover */
+.dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); /* Move to its natural position */
+    transition-delay: 0s; /* Ensure transition applies immediately */
+}
 
-	.dropdown-content li a:hover {
-		color: rgba(255, 255, 255, 0.55);
-	}
+/* Adjust the container as needed */
+.dropdown {
+    position: relative;
+}
 
-	/* Show the dropdown with animation on hover */
-	.dropdown:hover .dropdown-content {
-		display: block;
-		opacity: 1;
-		visibility: visible;
-		transform: translateY(0);
+
+
+
+
+	/* Video Containers */
+	.video-container {
+		display: flex;           	/* Establish flex container */
+		justify-content: center;  	/* Horizontally center the content */
+		align-items: center;      	/* Vertically center the content if needed */
+		flex-direction: row;   		/* Stack iframes vertically */
+		margin: 5 auto;           	/* Center the container in its parent element */
+		width: 100%;              	/* Optional: Full width container */
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+	}
+	
+	.video-container iframe {
+		max-width: 100%;          /* Ensure iframes are responsive */
+		height: 50vh;             /* Maintain aspect ratio */
+		padding: 50px;
 	}
 
 
