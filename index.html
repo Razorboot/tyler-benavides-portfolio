@@ -4,6 +4,9 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+
+
 <html>
 	<head>
 		<title>Tyler Benavides Portfolio</title>
@@ -34,9 +37,48 @@
 				<!-- Intro -->
 					<section id="intro" class="wrapper style1 fullscreen fade-up">
 						<div class="inner">
-							<div class="image-left-text">
-								<img src="images/headshot.png" alt="Description">
+							<!-- Embed Three JS headshot -->\
+							<div id="threejs-container">
+								<script>
+									// Create scene, camera, and renderer
+									const scene = new THREE.Scene();
+									const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+									const renderer = new THREE.WebGLRenderer();
+									renderer.setSize(window.innerWidth, window.innerHeight);
+								 
+									// Attach renderer to specific container
+									const container = document.getElementById('threejs-container');
+									container.appendChild(renderer.domElement);
+								 
+									// Load texture (your headshot image)
+									const texture = new THREE.TextureLoader().load('images/headshot.png');
+								 
+									// Create a 3D plane to map the image on
+									const geometry = new THREE.PlaneGeometry(5, 5); // Adjust the size if needed
+									const material = new THREE.MeshBasicMaterial({ map: texture });
+									const plane = new THREE.Mesh(geometry, material);
+									scene.add(plane);
+								 
+									// Set camera position
+									camera.position.z = 10;
+								 
+									// Animation loop for rotation
+									function animate() {
+										requestAnimationFrame(animate);
+										plane.rotation.y += 0.01; // Rotating the plane
+										renderer.render(scene, camera);
+									}
+									animate();
+								 
+									// Handle window resize
+									window.addEventListener('resize', () => {
+										renderer.setSize(window.innerWidth, window.innerHeight);
+										camera.aspect = window.innerWidth / window.innerHeight;
+										camera.updateProjectionMatrix();
+									});
+								 </script>								 
 							</div>
+							
 
 							<h1>Tyler Benavides Portfolio</h1>
 							<p>
