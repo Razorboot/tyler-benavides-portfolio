@@ -347,6 +347,7 @@ input, select, textarea {
 
 	/* Hide the dropdown menu initially with a transition */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	/* Dropdown container */
 	.dropdown {
 		position: relative;
@@ -391,6 +392,8 @@ input, select, textarea {
 		width: 100%;              	/* Optional: Full width container */
 		box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 =======
+=======
+>>>>>>> parent of bdf4bb6 (Init dropdown menu)
 	.dropdown-content {
 		display: none;
 		position: absolute;
@@ -402,6 +405,9 @@ input, select, textarea {
 		visibility: hidden;
 		transform: translateY(-10px);
 		transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+<<<<<<< HEAD
+>>>>>>> parent of bdf4bb6 (Init dropdown menu)
+=======
 >>>>>>> parent of bdf4bb6 (Init dropdown menu)
 	}
 
