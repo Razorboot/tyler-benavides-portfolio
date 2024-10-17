@@ -66,8 +66,8 @@
 									// spotLight.angle = Math.PI / 8; // Set the angle of the spotlight
 									// spotLight.distance = 60; // Set the distance the light reaches
 									// spotLight.penumbra = 0.2; // Soft edges of the spotlight
-									spotLight.distance = 90;
-									spotLight.intensity = 1;
+									spotLight.distance = 100;
+									spotLight.intensity = 1.2;
 									spotLight.decay = 0.5;
 									spotLight.castShadow = true; // Enable shadow casting
 
@@ -89,7 +89,7 @@
 									// 		new THREE.MeshStandardMaterial({ map: texture }),
 									// 		new THREE.MeshStandardMaterial({ color: 'darkgray' }),
 									// 	]
-									// );
+									// ); - put some hobbies here
 									const plane = new THREE.Mesh(
 										new THREE.CylinderGeometry(5, 5, 1, 32),
 										[
@@ -130,14 +130,14 @@
 										moveSpotlightToMouse(spotLight, mouseX, mouseY)
 									});
 
-									container.addEventListener('touchmove', (event) => {
-										if (event.touches.length > 0) {
-											const touch = event.touches[0];
-											mouseX = (touch.clientX / window.innerWidth) * 2 - 1;
-											mouseY = -(touch.clientY / window.innerHeight) * 2 + 1;
-											moveSpotlightToMouse(spotLight, mouseX, mouseY)
-										}
-									});
+									// container.addEventListener('touchmove', (event) => {
+									// 	if (event.touches.length > 0) {
+									// 		const touch = event.touches[0];
+									// 		mouseX = (touch.clientX / window.innerWidth) * 2 - 1;
+									// 		mouseY = -(touch.clientY / window.innerHeight) * 2 + 1;
+									// 		moveSpotlightToMouse(spotLight, mouseX, mouseY)
+									// 	}
+									// });
 
 									// Animation loop for rotation based on mouse movement
 									let mouseSensitivity = 0.1;
@@ -257,7 +257,7 @@
 								<div class="inner">
 									<h2 class="major">Arescentem</h2>
 									<h3>Personal Project</h3>
-									<p>An immersive, story-based, psychological horror game with a focus on real-time physics interaction in 3D.</p>
+									<p>An immersive, story-based, psychological horror video game with a focus on real-time physics interaction in 3D.</p>
 									<ul class="actions">
 										<li><a href="https://www.youtube.com/watch?v=Cuk34YONXE0" target="_blank" class="button">Learn more</a></li>
 									</ul>
@@ -309,6 +309,8 @@
 										<li>LÖVE2D</li>
 										<li>Unreal Engine 5</li>
 										<li>Roblox</li>
+										<li>FL Studio 			(music production for original soundtrack)</li>
+										<li>Adobe Premiere Pro	(video editing for promotional material)</li>
 								</section>
 								<section>
 									<span class="icon solid major fa-fire"></span>
@@ -322,13 +324,18 @@
 								</section>
 								<section>
 									<span class="icon major fa-gem"></span>
-									<h3>Aliquam urna dapibus</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<h3>Soft Skills & Hobbies</h3>
+										<p>
+											Teamwork skills & practiced hobbies that I use to complete projects. Showcases multipotentialism.
+											<li>Experience in playing guitar, piano, drums, and music production to create original soundtrack in game development.</li>
+											<li>Experience in creating and editing videos for game trailers and promotional material.</li>
+											<li>Strong skills in the Design Thinking methodology to plan and develop projects that involve multiple developers.</li>
+										</p>
 								</section>
 							</div>
-							<ul class="actions">
+							<!-- <ul class="actions">
 								<li><a href="flippper_internship.html" class="button">Learn more</a></li>
-							</ul>
+							</ul> -->
 						</div>
 					</section>
 
