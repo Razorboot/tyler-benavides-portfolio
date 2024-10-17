@@ -24,7 +24,7 @@
 						<ul>
 							<li><a href="#intro">Welcome</a></li>
 							<li><a href="#one">Projects / Experiences</a></li>
-							<li><a href="#two">What we do</a></li>
+							<li><a href="#two">Skills</a></li>
 							<li><a href="#three">Get in touch</a></li>
 						</ul>
 					</nav>
@@ -43,125 +43,282 @@
 								<script>
 									// Create scene, camera, and renderer
 									const scene = new THREE.Scene();
-									const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-									const renderer = new THREE.WebGLRenderer();
-									renderer.setSize(window.innerWidth, window.innerHeight);
-								 
+									const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 1000);
+									const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+									renderer.setSize(420, 420);
+									renderer.shadowMap.enabled = true; // Enable shadow mapping
+									renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: soften shadows
+
 									// Attach renderer to specific container
 									const container = document.getElementById('threejs-container');
 									container.appendChild(renderer.domElement);
-								 
+
 									// Load texture (your headshot image)
 									const texture = new THREE.TextureLoader().load('images/headshot.png');
-								 
-									// Create a 3D plane to map the image on
-									const geometry = new THREE.PlaneGeometry(5, 5); // Adjust the size if needed
-									const material = new THREE.MeshBasicMaterial({ map: texture });
-									const plane = new THREE.Mesh(geometry, material);
+
+									// Ambient light
+									const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+									scene.add(ambientLight);
+
+									// Spotlight setup
+									const spotLight = new THREE.PointLight(0xffffff, 1);
+									spotLight.position.set(10, 0, 20); // Adjust position to effectively illuminate the object
+									// spotLight.angle = Math.PI / 8; // Set the angle of the spotlight
+									// spotLight.distance = 60; // Set the distance the light reaches
+									// spotLight.penumbra = 0.2; // Soft edges of the spotlight
+									spotLight.distance = 90;
+									spotLight.intensity = 0.95;
+									spotLight.decay = 0.5;
+									spotLight.castShadow = true; // Enable shadow casting
+
+									// Shadow settings for spotlight
+									spotLight.shadow.mapSize.width = 1024; // Set shadow map width
+									spotLight.shadow.mapSize.height = 1024; // Set shadow map height
+									spotLight.shadow.camera.near = 0.1; // Set shadow camera near value
+									spotLight.shadow.camera.far = 100; // Set shadow camera far value
+									scene.add(spotLight);
+
+									// Create the 3D plane to map the image on
+									// const plane = new THREE.Mesh(
+									// 	new THREE.BoxGeometry(8, 8, 2),
+									// 	[
+									// 		new THREE.MeshStandardMaterial({ color: 'darkgray' }),
+									// 		new THREE.MeshStandardMaterial({ color: 'darkgray' }),
+									// 		new THREE.MeshStandardMaterial({ color: 'darkgray' }),
+									// 		new THREE.MeshStandardMaterial({ color: 'darkgray' }),
+									// 		new THREE.MeshStandardMaterial({ map: texture }),
+									// 		new THREE.MeshStandardMaterial({ color: 'darkgray' }),
+									// 	]
+									// );
+									const plane = new THREE.Mesh(
+										new THREE.CylinderGeometry(5, 5, 1, 32),
+										[
+											new THREE.MeshStandardMaterial({ color: '#36293d' }),
+											new THREE.MeshStandardMaterial({ map: texture }),
+											new THREE.MeshStandardMaterial({ color: '#36293d' })
+										]
+										
+									);
+
+									plane.position.z = 2;
+									plane.castShadow = true; // Enable shadow casting for the plane
 									scene.add(plane);
-								 
+
+									// Background plane to receive shadows
+									const background_plane = new THREE.Mesh(
+										new THREE.CylinderGeometry(8, 8, 1, 32),
+										new THREE.MeshPhongMaterial({ color: '#36293d', shininess: 17 })
+									);
+									var init_rotation_num = Math.PI / 2;
+									background_plane.rotation.x = init_rotation_num; // Rotate the plane to be horizontal
+									background_plane.rotation.y = init_rotation_num; // Rotate the plane to be horizontal
+									background_plane.position.y = 0;
+									background_plane.position.z = 0;
+									background_plane.receiveShadow = true; // Enable shadow receiving for the background
+									scene.add(background_plane);
+
 									// Set camera position
-									camera.position.z = 10;
-								 
-									// Animation loop for rotation
+									camera.position.z = 20;
+
+									// Variables to track mouse movement
+									let mouseX = 0, mouseY = 0;
+
+									// Event listeners for mouse and touch movement
+									document.addEventListener('mousemove', (event) => {
+										mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+										mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+										moveSpotlightToMouse(spotLight, mouseX, mouseY)
+									});
+
+									container.addEventListener('touchmove', (event) => {
+										if (event.touches.length > 0) {
+											const touch = event.touches[0];
+											mouseX = (touch.clientX / window.innerWidth) * 2 - 1;
+											mouseY = -(touch.clientY / window.innerHeight) * 2 + 1;
+											moveSpotlightToMouse(spotLight, mouseX, mouseY)
+										}
+									});
+
+									// Animation loop for rotation based on mouse movement
+									let mouseSensitivity = 0.1;
+									let timeAccumulator = 0;
+									right_angle = deg_to_rad(90.0);
+
+									plane.rotation.y = right_angle
+
+
+									// Math Functions
+									function lerp(a, b, n) {
+										return (1 - n) * a + n * b;
+									}
+
+									function deg_to_rad(degrees) {
+										return degrees * (Math.PI / 180.0);
+									}
+
+									function moveSpotlightToMouse(myLight, newMouseX, newMouseY) {
+										// Update spotlight position based on mouse
+										myLight.position.set(mouseX * 25, mouseY * 25, 30); // Adjust multiplier to control range
+									}
+
 									function animate() {
 										requestAnimationFrame(animate);
-										plane.rotation.y += 0.01; // Rotating the plane
+										planeRotationGoalY = (mouseX * -mouseSensitivity) + right_angle;
+										planeRotationGoalX = (mouseY * -mouseSensitivity) + init_rotation_num;
+										plane.rotation.x = lerp(plane.rotation.x, planeRotationGoalX, 0.05)
+										//plane.rotation.y = lerp(plane.rotation.y, planeRotationGoalY, 0.05);
+
+										background_plane.rotation.y = plane.rotation.y;
+										background_plane.rotation.x = plane.rotation.x;
+
+										timeAccumulator += 0.005;
+										//spotLight.position.set(Math.cos(timeAccumulator) * 10, 8, 20);
+										spotLight.position
 										renderer.render(scene, camera);
 									}
 									animate();
-								 
+
 									// Handle window resize
 									window.addEventListener('resize', () => {
-										renderer.setSize(window.innerWidth, window.innerHeight);
-										camera.aspect = window.innerWidth / window.innerHeight;
+										const aspect = 1;
+										renderer.setSize(420, 420);
+										camera.aspect = aspect;
 										camera.updateProjectionMatrix();
 									});
-								 </script>								 
+
+								</script>															 
 							</div>
 							
 
-							<h1>Tyler Benavides Portfolio</h1>
+							<h1>Tyler Benavides</h1>
 							<p>
-								<li>Computer Science Student @ UCSC</li>
-								<li>3D Graphics Programmer & SDK Developer</li>
+								Welcome to my portfolio! I am a dedicated Computer Science student passionate about leveraging technology to create user-friendly 3D development tools to help aspiring developers. 
+								With a strong foundation in all aspects of 3D development, I aspire to contribute to cutting-edge projects in software engineering.
+								I am always seeking opportunities that will allow me to continue growing my skills in a collaborative and innovative environment.
 							</p>
-							<ul class="actions">
+							<!-- <ul class="actions">
 								<li><a href="#one" class="button scrolly">Learn more</a></li>
-							</ul>
+							</ul> -->
 						</div>
 					</section>
 
 				<!-- One -->
 					<section id="one" class="wrapper style2 spotlights">
+						
+						<!-- Flippper Internship Experience -->
 						<section>
-							<a href="#" class="image"><img src="images/pic01.jpg" alt="" data-position="center center" /></a>
+							<a href="flippper_internship.html" class="image"><img src="images/flippper_logo_notext.png" alt="" data-position="50%, 50%" /></a>
 							<div class="content">
 								<div class="inner">
-									<h2>Flippper Internship Experience</h2>
+									<h2 class="major">Flippper Internship Experience</h2>
+									<h3>Internship Experience</h3>
 									<p>Overview of my 3D Modeling & Software Development Virtual Internship at Flippper startup in Baden-Württemberg, Germany.</p>
 									<ul class="actions">
-										<li><a href="flippper_internship.html" class="button">Learn more</a></li>
+										<li><a href="flippper_internship.html" target="_blank" class="button">Learn more</a></li>
 									</ul>
 								</div>
 							</div>
 						</section>
+
+						<!-- Radiosity Engine -->
 						<section>
-							<a href="#" class="image"><img src="images/pic02.jpg" alt="" data-position="top center" /></a>
+							<a href="https://github.com/Razorboot/radiosity_engine_luau" target="_blank" class="image"><img src="images/radiosity_engine_thumbnail.png" alt="" data-position="center centerr" /></a>
 							<div class="content">
 								<div class="inner">
-									<h2>Feugiat consequat</h2>
-									<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
+									<h2 class="major">Radiosity Engine</h2>
+									<h3>Personal Project</h3>
+									<p>A fast, robust Baked Lighting solution for Lua-based game engines.</p>
 									<ul class="actions">
-										<li><a href="flippper_internship.html" class="button">Learn more</a></li>
+										<li><a href="https://github.com/Razorboot/radiosity_engine_luau" target="_blank" class="button">Learn more</a></li>
 									</ul>
 								</div>
 							</div>
 						</section>
+
+						<!-- LOOGE -->
 						<section>
-							<a href="#" class="image"><img src="images/pic03.jpg" alt="" data-position="25% 25%" /></a>
+							<a href="https://github.com/Razorboot/LOVR-OOP-Graphics-Engine" target="_blank" class="image"><img src="images/looge_logo.png" alt="" data-position="center" /></a>
 							<div class="content">
 								<div class="inner">
-									<h2>Ultricies aliquam</h2>
-									<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
+									<h2 class="major">Custom Object Oriented 3D Game Engine</h2>
+									<h3>Personal Project</h3>
+									<p>A complex, lightweight, user-friendly game engine designed to be easy-to-use for beginner game developers.</p>
 									<ul class="actions">
-										<li><a href="flippper_internship.html" class="button">Learn more</a></li>
+										<li><a href="https://github.com/Razorboot/LOVR-OOP-Graphics-Engine" target="_blank" class="button">Learn more</a></li>
 									</ul>
 								</div>
 							</div>
 						</section>
+
+						<!-- Arescentem -->
+						<section>
+							<a href="https://www.youtube.com/watch?v=Cuk34YONXE0" target="_blank" class="image"><img src="images/arescentem_logo.png" alt="" data-position="50% 50%" /></a>
+							<div class="content">
+								<div class="inner">
+									<h2 class="major">Arescentem</h2>
+									<h3>Personal Project</h3>
+									<p>An immersive, story-based, psychological horror game with a focus on real-time physics interaction in 3D.</p>
+									<ul class="actions">
+										<li><a href="https://www.youtube.com/watch?v=Cuk34YONXE0" target="_blank" class="button">Learn more</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+
 					</section>
 
 				<!-- Two -->
 					<section id="two" class="wrapper style3 fade-up">
 						<div class="inner">
-							<h2>What we do</h2>
-							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
+							<h2 class="major">Skills</h2>
 							<div class="features">
 								<section>
 									<span class="icon solid major fa-code"></span>
-									<h3>Lorem ipsum amet</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<h3>Programming Languages</h3>
+										<p>
+											+6 years of programming experience in several programming languages. 
+											<br />
+											Familiar with:
+										</p>
+										<li>Lua</li>
+										<li>GLSL</li>
+										<li>Python</li>
+										<li>C++</li>
+										<li>JavaScript</li>
+										<li>HTML/CSS</li>
 								</section>
 								<section>
-									<span class="icon solid major fa-lock"></span>
-									<h3>Aliquam sed nullam</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<span class="icon solid major fa-comments"></span>
+									<h3>Languages</h3>
+										<p>My first language is Portuguese. However, I was raised speaking English, Spanish, and Portuguese.
+											<li>English &emsp; &ensp;&ensp; (Native)</li>
+											<li>Portuguese &ensp;	(Native)</li>
+											<li>Spanish &emsp;&nbsp;&nbsp;&ensp; (Fluent)</li>
+										</p>
 								</section>
 								<section>
-									<span class="icon solid major fa-cog"></span>
-									<h3>Sed erat ullam corper</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<span class="icon solid major fa-cube"></span>
+									<h3>3D Modelling & Animation</h3>
+										<p>Proficient with Blender for modelling, UV mapping, & animation, as well as Substance Painter for PBR material creation.</p>
 								</section>
 								<section>
-									<span class="icon solid major fa-desktop"></span>
-									<h3>Veroeros quis lorem</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<span class="icon solid major fa-gamepad"></span>
+									<h3>Game Development</h3>
+										<li>Godot</li>
+										<li>LÖVR</li>
+										<li>LÖVE2D</li>
+										<li>Unreal Engine 5</li>
+										<li>Roblox</li>
 								</section>
 								<section>
-									<span class="icon solid major fa-link"></span>
-									<h3>Urna quis bibendum</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<span class="icon solid major fa-fire"></span>
+									<h3>Frameworks & APIs</h3>
+										<p>
+											Proficient with a variety of frameworks and APIs in both high-level and low-level projects, including:
+											<li>OpenGL, Vulkan, DirectX, and WebGL.</li>
+											<li>ThreeJS, PyGame, and Ogre3D</li>
+											<li>LÖVR (VR development), Löve2D</li>
+										</p>
 								</section>
 								<section>
 									<span class="icon major fa-gem"></span>
@@ -179,9 +336,9 @@
 					<section id="three" class="wrapper style1 fade-up">
 						<div class="inner">
 							<h2>Get in touch</h2>
-							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
-							<div class="split style1">
-								<section>
+							<!-- <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p> -->
+							<div class="style1">
+								<!-- <section>
 									<form method="post" action="#">
 										<div class="fields">
 											<div class="field half">
@@ -201,31 +358,28 @@
 											<li><a href="" class="button submit">Send Message</a></li>
 										</ul>
 									</form>
-								</section>
+								</section> -->
 								<section>
 									<ul class="contact">
-										<li>
+										<!-- <li>
 											<h3>Address</h3>
 											<span>12345 Somewhere Road #654<br />
 											Nashville, TN 00000-0000<br />
 											USA</span>
-										</li>
+										</li> -->
 										<li>
 											<h3>Email</h3>
-											<a href="#">user@untitled.tld</a>
+											<a href="mailto: tyebenav@ucsc.edu">tyebenav@ucsc.edu</a>
 										</li>
 										<li>
 											<h3>Phone</h3>
-											<span>(000) 000-0000</span>
+											<span>(650) 850-2675</span>
 										</li>
 										<li>
 											<h3>Social</h3>
 											<ul class="icons">
-												<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-												<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-												<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-												<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-												<li><a href="#" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+												<li><a href="https://github.com/Razorboot" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+												<li><a href="https://www.linkedin.com/in/tbena/" target="_blank" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
 											</ul>
 										</li>
 									</ul>
