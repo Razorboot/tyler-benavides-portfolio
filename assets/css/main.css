@@ -370,6 +370,21 @@ input, select, textarea {
 		border-radius: 50%;
 	}
 
+	@media screen and (max-width: 736px) {
+		#threejs-container {
+			float: none;
+			width: 100%;
+			height: 300px;
+			margin-top: 1em;
+			margin-right: 0;
+			margin-bottom: 1em;
+		}
+	
+		.intro-text {
+			margin-top: 2em;
+		}
+	}
+
 
 	/* Dropdown container */
 	.dropdown {
