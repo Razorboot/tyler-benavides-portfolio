@@ -440,6 +440,19 @@ input, select, textarea {
 		auto-play: false;
 	}
 
+	@media screen and (max-width: 1200px) {
+		.video-container {
+			padding: 0px;
+			padding-top: 40px;
+			padding-bottom: 40px;
+			flex-direction: column; /* Stack iframes vertically */
+			//float: none; /* Remove float to place it in the flow of the document */
+			width: 100%; /* Take full width */
+			height: auto; /* Adjust height to content */
+			margin: 0 auto 1.5em auto; /* Center align with margin adjustments */
+		}
+	}
+
 
 	/* Row */
 	.row {
