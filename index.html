@@ -45,7 +45,9 @@
 									const scene = new THREE.Scene();
 									const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 1000);
 									const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-									renderer.setSize(420, 420);
+									const screen_aspect = window.innerWidth / window.innerHeight;
+									const pfp_size = get_new_pfp_size();
+									renderer.setSize(pfp_size, pfp_size); // Set renderer size
 									renderer.shadowMap.enabled = true; // Enable shadow mapping
 									renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: soften shadows
 
@@ -148,6 +150,9 @@
 
 
 									// Math Functions
+									function get_new_pfp_size() {
+										return window.innerWidth * screen_aspect * 0.15;
+									}
 									function lerp(a, b, n) {
 										return (1 - n) * a + n * b;
 									}
@@ -180,9 +185,9 @@
 
 									// Handle window resize
 									window.addEventListener('resize', () => {
-										const aspect = 1;
-										renderer.setSize(420, 420);
-										camera.aspect = aspect;
+										let new_size = get_new_pfp_size();
+										renderer.setSize(new_size, new_size);
+										camera.aspect = 1;
 										camera.updateProjectionMatrix();
 									});
 
