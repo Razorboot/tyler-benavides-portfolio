@@ -42,6 +42,7 @@
 							
 							<!-- Embed Three JS headshot -->
 							<div id="threejs-container">
+								<div class="gradient-background"></div> <!-- New gradient box div -->
 								<script>
 									// Create scene, camera, and renderer
 									const scene = new THREE.Scene();
@@ -87,7 +88,7 @@
 									spotLight.shadow.mapSize.height = 2048; // Set shadow map height
 									spotLight.shadow.camera.near = 1; // Set shadow camera near value
 									spotLight.shadow.camera.far = 200; // Set shadow camera far value
-									spotLight.shadow.normalBias = 0.01; 
+									spotLight.shadow.normalBias = 0.001; 
 									spotLight.shadow.bias = -0.001; 
 									renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 									scene.add(spotLight);
@@ -144,8 +145,7 @@
 
 									// Math Functions
 									function get_new_pfp_size() {
-										// return window.innerWidth * screen_aspect * 0.15;
-										return 400;
+										return window.innerWidth * 0.25;
 									}
 									function lerp(a, b, n) {
 										return (1 - n) * a + n * b;
@@ -198,8 +198,11 @@
 
 									// Handle window resize
 									window.addEventListener('resize', () => {
-										// let new_size = get_new_pfp_size();
-										// renderer.setSize(new_size, new_size);
+										let new_size = get_new_pfp_size();
+										if (window.innerWidth < 1200) {
+											new_size *= 2.5;
+										}
+										renderer.setSize(new_size, new_size);
 										camera.aspect = 1;
 										camera.updateProjectionMatrix();
 									});

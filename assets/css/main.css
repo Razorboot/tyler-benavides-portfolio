@@ -380,6 +380,31 @@ input, select, textarea {
 		}
 	}
 
+	.gradient-background {
+		position: absolute; /* Position it relative to the #threejs-container */
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border-radius: 8%; /* Make it rounded */
+		background: linear-gradient(135deg, rgba(10, 20, 40, 0.5), rgba(15, 30, 70, 0.4), rgba(20, 40, 90, 0.3), rgba(25, 50, 110, 0.2));
+		animation: gradientAnimation 12s ease infinite;
+		backdrop-filter: blur(0.005px); /* To blur whatever is behind it */
+		filter: blur(8px); /* Adds an additional blur for softness */
+		z-index: -1; /* Ensure it's behind the Three.js content */
+	}
+	
+	/* Keyframes for the gradient animation */
+	@keyframes gradientAnimation {
+		0% { background-position: 0% 50%; }
+		50% { background-position: 100% 50%; }
+		100% { background-position: 0% 50%; }
+	}
+	
+	.gradient-background {
+		background-size: 300% 300%; /* Ensures a smoother, slower animation */
+	}
+
 
 	/* Dropdown container */
 	.dropdown {
@@ -941,7 +966,7 @@ input, select, textarea {
 
 		}
 
-		@media screen and (max-width: 1280px) {
+		@media screen and (max-width: 1200px) {
 
 			.row {
 				display: flex;
