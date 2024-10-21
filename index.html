@@ -130,9 +130,9 @@
 
 									// Event listeners for mouse and touch movement
 									document.addEventListener('mousemove', (event) => {
-										mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-										mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-										moveSpotlightToMouse(spotLight, mouseX, mouseY)
+										// mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+										// mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+										// moveSpotlightToMouse(spotLight, mouseX, mouseY)
 									});
 
 									// Animation loop for rotation based on mouse movement
@@ -190,7 +190,7 @@
 										// background_plane.rotation.x = plane.rotation.x;
 
 										timeAccumulator += 0.005;
-										//spotLight.position.set(Math.cos(timeAccumulator) * 10, 8, 20);
+										spotLight.position.set(Math.cos(timeAccumulator) * 10, 8, 20);
 										spotLight.position
 										renderer.render(scene, camera);
 									}
@@ -203,8 +203,8 @@
 											new_size *= 2.5;
 										}
 										renderer.setSize(new_size, new_size);
-										camera.aspect = 1;
-										camera.updateProjectionMatrix();
+										//camera.aspect = 1;
+										//camera.updateProjectionMatrix();
 									});
 
 								</script>															 
