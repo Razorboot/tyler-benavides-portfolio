@@ -52,69 +52,62 @@
 									const pfp_size = get_new_pfp_size();
 									renderer.setSize(pfp_size, pfp_size); // Set renderer size
 									renderer.shadowMap.enabled = true; // Enable shadow mapping
-									//renderer.toneMapping = THREE.LinearToneMapping  // Use a tone mapping technique that brightens the scene
-									//renderer.toneMappingExposure = 0.5;
 									renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: soften shadows
-
+									
 									// Attach renderer to specific container
 									const container = document.getElementById('threejs-container');
 									container.appendChild(renderer.domElement);
-
+									
 									// Load texture (your headshot image)
 									const texture = new THREE.TextureLoader().load('images/headshot.png');
-
+									
 									// Ambient light
 									const ambientLight = new THREE.AmbientLight(0xffe5b4, 0.5);
 									scene.add(ambientLight);
-
+									
 									// Add backlight behind the model
 									const backLight = new THREE.DirectionalLight(0xAB96D0, 1.0); // White light with full intensity
 									backLight.position.set(-10, 10, -10); // Position the light behind and above the model
 									scene.add(backLight);
-
+									
 									// Spotlight setup
 									const spotLight = new THREE.PointLight(0xedd7ad, 1);
 									spotLight.position.set(10, -5, 20); // Adjust position to effectively illuminate the object
-									// spotLight.angle = Math.PI / 8; // Set the angle of the spotlight
-									// spotLight.distance = 60; // Set the distance the light reaches
-									// spotLight.penumbra = 0.2; // Soft edges of the spotlight
 									spotLight.distance = 200;
-									spotLight.intensity = 0.8;
-									//spotLight.decay = 1;
+									spotLight.intensity = 0.6;
 									spotLight.castShadow = true; // Enable shadow casting
-
+									
 									// Shadow settings for spotlight
 									spotLight.shadow.mapSize.width = 1048; // Set shadow map width
 									spotLight.shadow.mapSize.height = 1048; // Set shadow map height
 									spotLight.shadow.camera.near = 1; // Set shadow camera near value
 									spotLight.shadow.camera.far = 100; // Set shadow camera far value
-									spotLight.shadow.normalBias = 0.01; 
-									spotLight.shadow.bias = -0.0005; 
+									spotLight.shadow.normalBias = 0.01;
+									spotLight.shadow.bias = -0.0005;
 									spotLight.shadow.radius = 5;
 									spotLight.shadow.blurSamples = 25;
 									renderer.shadowMap.type = THREE.VSMShadowMap; // Set shadow mapping type
 									scene.add(spotLight);
-
+									
+									// Load the GLB model
 									const loader = new THREE.GLTFLoader();
 									loader.load(
 										'models/pfp_model.glb', // Replace with the path to your GLB model
 										function (gltf) {
 											const model = gltf.scene;
-
+									
 											model.traverse(function (child) {
 												if (child.isMesh) {
 													child.castShadow = true;  // Ensure all meshes cast shadows
 													child.receiveShadow = true;  // Ensure all meshes receive shadows
-													// let cur_texture = child.material.texture;
-													// child.material = THREE.MeshToonMaterial({map: cur_texture}); // Apply the texture to the model
 												}
 											});
-
+									
 											// Set the position, rotation, or scale of the model if needed
 											model.position.set(0.13, 0, 2);
 											model.castShadow = true; // Enable shadow casting for the model
 											model.rotation.y = -Math.PI / 2;
-
+									
 											// Add the loaded model to the scene
 											scene.add(model);
 										},
@@ -123,49 +116,32 @@
 											console.error('An error happened while loading the GLB model:', error);
 										}
 									);
-
+									
 									// Set camera position
 									camera.position.z = 5.8;
-
+									
 									// Variables to track mouse movement
 									let mouseX = 0, mouseY = 0;
-
-									// Event listeners for mouse and touch movement
-									// document.addEventListener('mousemove', (event) => {
-									// 	// mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-									// 	// mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-									// 	// moveSpotlightToMouse(spotLight, mouseX, mouseY)
-									// });
-
-									// Animation loop for rotation based on mouse movement
-									let mouseSensitivity = 0.1;
-									let timeAccumulator = 0;
-									right_angle = deg_to_rad(90.0);
-
-									// plane.rotation.y = right_angle
-
-
-									// Math Functions
-									function get_new_pfp_size() {
-										return window.innerWidth * 0.25;
+									let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+									
+									// Event listeners for mouse movement (desktop only)
+									if (!isMobile) {
+										document.addEventListener('mousemove', (event) => {
+											mouseX = -(event.clientX / window.innerWidth) * 2 + 1;  // Invert the X value
+											mouseY = (event.clientY / window.innerHeight) * 2 - 1;  // Invert the Y value
+											moveSpotlightToMouse(spotLight, mouseX, mouseY);
+										});
 									}
-									function lerp(a, b, n) {
-										return (1 - n) * a + n * b;
-									}
-
-									function deg_to_rad(degrees) {
-										return degrees * (Math.PI / 180.0);
-									}
-
+									
+									// Function to move spotlight based on mouse position (desktop)
 									function moveSpotlightToMouse(light, newMouseX, newMouseY) {
-										// Update spotlight position based on mouse
 										// Convert screen coordinates to normalized device coordinates
-										let ndcX = -newMouseX;  // Already between -1 and 1
-										let ndcY = -newMouseY;  // Already between -1 and 1
+										let ndcX = newMouseX;  // Already between -1 and 1
+										let ndcY = newMouseY;  // Already between -1 and 1
 										
 										// Create a 3D vector using NDC coordinates at z = 0 (near plane)
-										let vector = new THREE.Vector3(ndcX, ndcY, 28); // Set z to 0.5 for the middle depth
-
+										let vector = new THREE.Vector3(ndcX, ndcY, 28); // Set z to 28 for depth
+									
 										// Unproject this vector to world coordinates using the camera
 										vector.unproject(camera);
 										
@@ -174,14 +150,28 @@
 										
 										// Set distance to move the spotlight along the direction
 										let distance = 25;  // Adjust this value to set how far the light should be
-
+									
 										// Calculate the new position for the spotlight
 										let newPos = camera.position.clone().add(dir.multiplyScalar(distance));
-
+									
 										// Set the spotlight position to the new calculated position
-										light.position.set(newPos.x, newPos.y, newPos.z);
+										light.position.set(newPos.x, newPos.y, light.position.z); // Keep the current depth
 									}
-
+									
+									// Animation loop
+									function animate() {
+										requestAnimationFrame(animate);
+									
+										if (isMobile) {
+											// Mobile devices: Move spotlight in a loop
+											timeAccumulator += 0.005;
+											spotLight.position.x = Math.cos(timeAccumulator) * 10;
+										}
+										
+										renderer.render(scene, camera);
+									}
+									animate();
+									
 									// Handle window resize
 									window.addEventListener('resize', () => {
 										let new_size = get_new_pfp_size();
@@ -189,27 +179,13 @@
 											new_size *= 2.5;
 										}
 										renderer.setSize(new_size, new_size);
-										//camera.aspect = 1;
-										//camera.updateProjectionMatrix();
 									});
-
-									function animate() {
-										requestAnimationFrame(animate);
-										// planeRotationGoalY = (mouseX * -mouseSensitivity) + right_angle;
-										// planeRotationGoalX = (mouseY * -mouseSensitivity) + init_rotation_num;
-										// plane.rotation.x = lerp(plane.rotation.x, planeRotationGoalX, 0.05)
-
-										// background_plane.rotation.y = plane.rotation.y;
-										// background_plane.rotation.x = plane.rotation.x;
-
-										timeAccumulator += 0.005;
-										spotLight.position.x = Math.cos(timeAccumulator) * 10
-										//spotLight.position
-										renderer.render(scene, camera);
+									
+									function get_new_pfp_size() {
+										return window.innerWidth * 0.25;
 									}
-									animate();
-
-								</script>															 
+									</script>
+																							 
 							</div>
 							
 
